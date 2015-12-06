@@ -50,7 +50,9 @@ public class DBAdapter {
         {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                     + newVersion + ", which will destroy all old data");
-            db.execSQL("DROP TABLE IF EXISTS contacts");
+            db.execSQL("DROP TABLE IF EXISTS " + DBContract.WorkoutPlanInfo.WORKOUTPLAN_TABLE + ";" +
+                    "DROP TABLE IF EXISTS " + DBContract.MealPlanInfo.MEALPLAN_TABLE + ";" +
+                    "DROP TABLE IF EXISTS " + DBContract.UserInfo.USER_TABLE + ";");
             onCreate(db);
         }
     }

@@ -2,6 +2,7 @@ package com.example.ddw.pmd;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,7 +14,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.example.ddw.pmd.dummy.DummyContent;
+import java.util.ArrayList;
+
+//import com.example.ddw.pmd.dummy.DummyContent;
+import com.example.ddw.pmd.dtos.*;
 
 /**
  * A fragment representing a list of Items.
@@ -30,6 +34,7 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    DBAdapter db;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -68,15 +73,15 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        db = new DBAdapter(this.getContext());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
         // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
+        mAdapter = new ArrayAdapter<userDTO>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, getUsers());
     }
 
     @Override
@@ -162,6 +167,30 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onArticleSelected(int position);
+    }
+
+    public ArrayList<userDTO> getUsers() {
+        ArrayList<userDTO> users = new ArrayList<>();
+        Cursor c = db.getAllUsers();
+        if (c.moveToFirst())
+        {
+            do {
+                userDTO user = new userDTO();
+                user.setId(c.getInt(0));
+                user.setUsername(c.getString(1));
+                user.setPassword(c.getString(2));
+                user.setFirstname(c.getString(3));
+                user.setLastname(c.getString(4));
+                user.setEmail(c.getString(5));
+                user.setUsertype(c.getString(6));
+                user.setMealplan(c.getInt(7));
+                user.setWorkoutplan(c.getInt(8));
+                users.add(user);
+            } while (c.moveToNext());
+        }
+        db.close();
+        return users;
+
     }
 
 }
