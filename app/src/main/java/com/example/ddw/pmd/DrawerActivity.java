@@ -1,5 +1,8 @@
 package com.example.ddw.pmd;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -19,12 +22,15 @@ public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Fragment frag = null;
+    SharedPreferences pref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        pref = getSharedPreferences("userPrefs", Context.MODE_PRIVATE);
 
         frag = new Home_Fragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
@@ -87,8 +93,12 @@ public class DrawerActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_signout) {
+            SharedPreferences.Editor edit = pref.edit();
+            edit.putString("currUser", "").apply();
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+            finish();
         }
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
