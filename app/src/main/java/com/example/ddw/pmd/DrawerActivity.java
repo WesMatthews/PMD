@@ -78,10 +78,8 @@ public class DrawerActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_first) {
-            frag = new First_Fragment();
-        } else if (id == R.id.nav_second) {
-            frag = new Second_Fragment();
+        if (id == R.id.nav_profile) {
+            frag = new Home_Fragment();
         } else if (id == R.id.nav_UserList) {
             frag = new UserList();
         } else if (id == R.id.nav_MealPlan) {
