@@ -32,6 +32,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +72,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private Intent i;
     SharedPreferences pref;
+    private DBAdapter db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +85,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             startActivity(i);
         }
 
+        db = new DBAdapter(this);
+        // get the existing database file or from assets folder if doesn't exist
+        getDB();
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        i = new Intent(this, DrawerActivity.class);
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -104,6 +116,41 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    private void getDB() {
+        try {
+            String destPath = "/data/data/" + getPackageName() +
+                    "/databases";
+            File f = new File(destPath);
+            if (!f.exists()) {
+                f.mkdirs();
+                f.createNewFile();
+
+                //---copy the db from the assets folder into
+                // the databases folder---
+                CopyDB(getBaseContext().getAssets().open("PMDdb"),
+                        new FileOutputStream(destPath + "/PMDdb"));
+
+                populateDB();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void populateDB(){
+        db.addMealplan("Low Calorie", "Plan for faster weight loss", "4x carrots, 3cups vinegar, ");
+        db.addMealplan("Maintenance 1", "Medium intake for daily maintenance", "2ea cookie, 2ea apple");
+        db.addMealplan("Large Caloric Intake", "Designed for building muscle", "1desk cheez-its, 1drum grape jelly");
+        db.addWorkoutplan("New Customer", "Built for people just starting out", "30min Treadmill, 30min Jacobs Ladder");
+        db.addWorkoutplan("Maintenance 1", "Built for people", "36ea 30lbs bicep curls, 30min eliptical");
+        db.addWorkoutplan("Muscle Gain", "Built for rapid muscle gain", "40ea 300lbs bench press, 40ea 800lbs squats");
+        db.addUser("wesm", "password", "Wes", "Matthews", "Trainer", "wm@com.com", 1, 1);
+        db.addUser("darrylr", "password", "Darryl" , "Rutledge", "Client", "dr@com.com", 2, 2);
+        db.addUser("davem", "password", "David", "Murray", "Client", "dm@com.com", 3, 3);
     }
 
     private void populateAutoComplete() {
@@ -361,6 +408,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    public void CopyDB(InputStream inputStream,
+                       OutputStream outputStream) throws IOException {
+        //---copy 1K bytes at a time---
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) > 0) {
+            outputStream.write(buffer, 0, length);
+        }
+        inputStream.close();
+        outputStream.close();
     }
 }
 
