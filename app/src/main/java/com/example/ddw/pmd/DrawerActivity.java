@@ -19,7 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class DrawerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, UserList.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, UserList.OnFragmentInteractionListener,
+        MealPlanListFragment.OnFragmentInteractionListener, WorkoutPlanListFragment.OnFragmentInteractionListener{
 
     Fragment frag = null;
     SharedPreferences pref;
@@ -88,14 +89,14 @@ public class DrawerActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_first) {
-            frag = new First_Fragment();
-        } else if (id == R.id.nav_second) {
-            frag = new Second_Fragment();
-        } else if (id == R.id.nav_slideshow) {
+        if (id == R.id.nav_profile) {
+            frag = new Home_Fragment();
+        } else if (id == R.id.nav_UserList) {
             frag = new UserList();
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.nav_MealPlan) {
+            frag = new MealPlanListFragment();
+        } else if (id == R.id.nav_WorkoutPlan){
+            frag = new WorkoutPlanListFragment();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_signout) {

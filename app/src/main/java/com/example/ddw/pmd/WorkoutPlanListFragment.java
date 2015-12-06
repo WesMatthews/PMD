@@ -1,7 +1,6 @@
 package com.example.ddw.pmd;
 
 import android.app.Activity;
-import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,7 +24,7 @@ import com.example.ddw.pmd.dummy.DummyContent;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class UserList extends Fragment implements AbsListView.OnItemClickListener {
+public class WorkoutPlanListFragment extends Fragment implements AbsListView.OnItemClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -50,8 +49,8 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
     private ListAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
-    public static UserList newInstance(String param1, String param2) {
-        UserList fragment = new UserList();
+    public static WorkoutPlanListFragment newInstance(String param1, String param2) {
+        WorkoutPlanListFragment fragment = new WorkoutPlanListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -63,13 +62,13 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public UserList() {
+    public WorkoutPlanListFragment() {
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().setTitle("User List");
+        getActivity().setTitle("Workout Plan List");
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -79,11 +78,10 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
         mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user, container, false);
+        View view = inflater.inflate(R.layout.fragment_workoutplan, container, false);
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
@@ -97,11 +95,8 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
 
     @Override
     public void onAttach(Context context) {
-
         super.onAttach(context);
-
         Activity a;
-
         if (context instanceof Activity) {
             a = (Activity) context;
 
@@ -121,7 +116,6 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
             }
         }
     }
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -133,7 +127,6 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-           // mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
             mListener.onArticleSelected(position);
         }
     }

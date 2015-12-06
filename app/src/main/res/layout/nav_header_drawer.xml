@@ -30,7 +30,7 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Darryl Rutlegde, Wes Matthews &amp; David Murray"
+        android:text="Darryl Rutledge, Wes Matthews &amp; David Murray"
         android:layout_weight="0.98" />
 
 </LinearLayout>
