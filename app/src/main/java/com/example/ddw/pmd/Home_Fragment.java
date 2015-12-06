@@ -7,9 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by Poncho on 12/5/2015.
- */
+
 public class Home_Fragment extends Fragment {
 
     View view;
@@ -18,6 +16,8 @@ public class Home_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.home_layout, container, false);
+        getActivity().setTitle("Profile");
         return view;
+
     }
 }
