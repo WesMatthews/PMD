@@ -17,7 +17,7 @@ import android.view.MenuItem;
 
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, UserList.OnFragmentInteractionListener,
-        MealPlanListFragment.OnFragmentInteractionListener{
+        MealPlanListFragment.OnFragmentInteractionListener, WorkoutPlanListFragment.OnFragmentInteractionListener{
 
     Fragment frag = null;
     @Override
@@ -87,7 +87,7 @@ public class DrawerActivity extends AppCompatActivity
         } else if (id == R.id.nav_MealPlan) {
             frag = new MealPlanListFragment();
         } else if (id == R.id.nav_WorkoutPlan){
-            //frag = new WorkoutPlanFrag or smshit;
+            frag = new WorkoutPlanListFragment();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
