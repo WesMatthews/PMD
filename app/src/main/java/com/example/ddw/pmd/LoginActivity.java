@@ -118,6 +118,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    public void register(View view) {
+        Intent i = new Intent(this, RegisterActivity.class);
+        startActivity(i);
+    }
+
     private void getDB() {
         try {
             String destPath = "/data/data/" + getPackageName() +
