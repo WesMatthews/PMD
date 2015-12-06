@@ -16,7 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class DrawerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, UserList.OnFragmentInteractionListener {
 
     Fragment frag = null;
     @Override
@@ -82,7 +82,7 @@ public class DrawerActivity extends AppCompatActivity
         } else if (id == R.id.nav_second) {
             frag = new Second_Fragment();
         } else if (id == R.id.nav_slideshow) {
-
+            frag = new UserList();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
@@ -96,5 +96,8 @@ public class DrawerActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    public void onArticleSelected(int position)  {
+        //do things;
     }
 }
