@@ -73,6 +73,11 @@ public class DrawerActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
+        else if (id == R.id.action_about) {
+            frag = new About_Fragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
