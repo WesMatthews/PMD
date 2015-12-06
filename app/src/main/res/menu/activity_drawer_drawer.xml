@@ -11,13 +11,17 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="Second" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_UserList"
             android:icon="@drawable/ic_format_list_bulleted_24dp"
             android:title="User List Page" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_MealPlan"
+            android:icon="@drawable/ic_format_list_bulleted_24dp"
+            android:title="Meal Plan List Page" />
+        <item
+            android:id="@+id/nav_WorkoutPlan"
+            android:icon="@drawable/ic_format_list_bulleted_24dp"
+            android:title="Workout Plan List Page" />
     </group>
 
     <item android:title="Communicate">
