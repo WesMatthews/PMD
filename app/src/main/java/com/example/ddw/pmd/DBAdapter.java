@@ -105,6 +105,34 @@ public class DBAdapter {
         }
         return mCursor;
     }
+
+    public Cursor checkUserLogin(String username, String password) throws SQLException {
+        Cursor mCursor =
+                db.query(true, DBContract.UserInfo.USER_TABLE, new String[] {
+                                DBContract.UserInfo.USER_ID,
+                                DBContract.UserInfo.USER_USERNAME,
+                                DBContract.UserInfo.USER_PASSWORD,
+                                DBContract.UserInfo.USER_FIRSTNAME,
+                                DBContract.UserInfo.USER_LASTNAME,
+                                DBContract.UserInfo.USER_USERTYPE,
+                                DBContract.UserInfo.USER_EMAIL,
+                                DBContract.UserInfo.USER_MEALPLAN,
+                                DBContract.UserInfo.USER_WORKOUTPLAN},
+                        DBContract.UserInfo.USER_USERNAME + "= ?",
+                        new String[] {username}, null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        else {
+            return null;
+        }
+        if(mCursor.getCount() > 0) {
+            if (mCursor.getString(2).equals(password)) {
+                return mCursor;
+            }
+        }
+        return null;
+    }
     
     //---insert a user into the database---
     public long addUser(String username, String password, String firstname, String lastname, String usertype, String email, int mealplan, int workoutplan) {
