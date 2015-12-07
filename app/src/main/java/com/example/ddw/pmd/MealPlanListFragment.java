@@ -2,6 +2,7 @@ package com.example.ddw.pmd;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,71 +14,29 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.example.ddw.pmd.dummy.DummyContent;
+import com.example.ddw.pmd.dtos.mealplanDTO;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Large screen devices (such as tablets) are supported by replacing the ListView
- * with a GridView.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
- * interface.
- */
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class MealPlanListFragment extends Fragment implements AbsListView.OnItemClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    DBAdapter db;
     private OnFragmentInteractionListener mListener;
-
-    /**
-     * The fragment's ListView/GridView.
-     */
     private AbsListView mListView;
-
-    /**
-     * The Adapter which will be used to populate the ListView/GridView with
-     * Views.
-     */
     private ListAdapter mAdapter;
 
-    // TODO: Rename and change types of parameters
-    public static MealPlanListFragment newInstance(String param1, String param2) {
-        MealPlanListFragment fragment = new MealPlanListFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public MealPlanListFragment() {
-    }
+    public MealPlanListFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivity().setTitle("Meal Plan List");
+        db = new DBAdapter(this.getContext());
+        db.open();
 
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
-        // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
+        mAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, getMeals());
     }
 
     @Override
@@ -87,7 +46,7 @@ public class MealPlanListFragment extends Fragment implements AbsListView.OnItem
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
@@ -161,5 +120,22 @@ public class MealPlanListFragment extends Fragment implements AbsListView.OnItem
         // TODO: Update argument type and name
         public void onArticleSelected(int position);
     }
+
+    public ArrayList<String> getMeals() {
+        ArrayList<String> meals = new ArrayList<>();
+        Cursor c = db.getAllMealplans();
+        if (c.moveToFirst()) {
+            do {
+                mealplanDTO meal = new mealplanDTO();
+                meal.setPlanname(c.getString(1));
+                meal.setDescription(c.getString(2));
+                meals.add(meal.toString());
+            } while (c.moveToNext());
+        }
+        db.close();
+        Collections.sort(meals);
+        return meals;
+    }
+
 
 }

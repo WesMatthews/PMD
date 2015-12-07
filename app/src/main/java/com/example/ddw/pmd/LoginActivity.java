@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if(!currUser.equals("")){
             startActivity(i);
         }
-        //DeleteDB();
+        DeleteDB();
         db = new DBAdapter(this);
         // get the existing database file or from assets folder if doesn't exist
         getDB();

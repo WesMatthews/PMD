@@ -39,9 +39,9 @@ public class DBAdapter {
         public void onCreate(SQLiteDatabase db)
         {
             try {
-                String boobs = DBContract.CREATE_DB;
-                Log.d("Script: ", DBContract.CREATE_DB);
-                db.execSQL(DBContract.CREATE_DB);
+                db.execSQL(DBContract.UserInfo.CREATETABLE_USERS);
+                db.execSQL(DBContract.MealPlanInfo.CREATETABLE_MEALPLANS);
+                db.execSQL(DBContract.WorkoutPlanInfo.CREATETABLE_WORKOUTPLANS);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
