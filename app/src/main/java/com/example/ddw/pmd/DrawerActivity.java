@@ -1,5 +1,8 @@
 package com.example.ddw.pmd;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -16,15 +19,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class DrawerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, UserList.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, UserList.OnFragmentInteractionListener,
+        MealPlanListFragment.OnFragmentInteractionListener, WorkoutPlanListFragment.OnFragmentInteractionListener{
 
     Fragment frag = null;
+    SharedPreferences pref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        pref = getSharedPreferences("userPrefs", Context.MODE_PRIVATE);
 
         frag = new Home_Fragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
@@ -67,6 +74,11 @@ public class DrawerActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
+        else if (id == R.id.action_about) {
+            frag = new About_Fragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -77,18 +89,22 @@ public class DrawerActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_first) {
-            frag = new First_Fragment();
-        } else if (id == R.id.nav_second) {
-            frag = new Second_Fragment();
-        } else if (id == R.id.nav_slideshow) {
+        if (id == R.id.nav_profile) {
+            frag = new Home_Fragment();
+        } else if (id == R.id.nav_UserList) {
             frag = new UserList();
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.nav_MealPlan) {
+            frag = new MealPlanListFragment();
+        } else if (id == R.id.nav_WorkoutPlan){
+            frag = new WorkoutPlanListFragment();
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_signout) {
+            SharedPreferences.Editor edit = pref.edit();
+            edit.putString("currUser", "").apply();
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+            finish();
         }
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
