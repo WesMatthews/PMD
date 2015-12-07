@@ -31,7 +31,7 @@ public class DBContract {
                         USER_USERTYPE + " integer not null, " +
                         USER_EMAIL + " text not null, " +
                         USER_MEALPLAN + " integer, " +
-                        USER_WORKOUTPLAN + " integer);";
+                        USER_WORKOUTPLAN + " integer);\n\n";
     }
 
     public static abstract class MealPlanInfo {
@@ -46,12 +46,12 @@ public class DBContract {
                         MEALPLAN_ID + " integer primary key autoincrement, " +
                         MEALPLAN_PLANNAME + " text not null, " +
                         MEALPLAN_DESCRIPTION + " text not null, " +
-                        MEALPLAN_DETAILS + " text not nul);";
+                        MEALPLAN_DETAILS + " text not null);\n\n";
     }
 
     public static abstract class WorkoutPlanInfo {
         public static final String WORKOUTPLAN_TABLE = "workoutplans";
-        public static final String WORKOUTPLAN_ID = "workoutpplanid";
+        public static final String WORKOUTPLAN_ID = "workoutplanid";
         public static final String WORKOUTPLAN_PLANNAME = "planname";
         public static final String WORKOUTPLAN_DESCRIPTION = "description";
         public static final String WORKOUTPLAN_DETAILS = "details";
@@ -61,7 +61,7 @@ public class DBContract {
                         WORKOUTPLAN_ID + " integer primary key autoincrement, " +
                         WORKOUTPLAN_PLANNAME + " text not null, " +
                         WORKOUTPLAN_DESCRIPTION + " text not null, " +
-                        WORKOUTPLAN_DETAILS + " text not null);";
+                        WORKOUTPLAN_DETAILS + " text not null);\n\n";
     }
 
 }

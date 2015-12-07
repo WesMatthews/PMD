@@ -101,7 +101,7 @@ public class DrawerActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_signout) {
             SharedPreferences.Editor edit = pref.edit();
-            edit.putString("currUser", "").apply();
+            edit.putInt("currUser", -1).apply();
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
             finish();

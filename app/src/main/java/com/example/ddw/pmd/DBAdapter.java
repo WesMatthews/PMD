@@ -39,6 +39,8 @@ public class DBAdapter {
         public void onCreate(SQLiteDatabase db)
         {
             try {
+                String boobs = DBContract.CREATE_DB;
+                Log.d("Script: ", DBContract.CREATE_DB);
                 db.execSQL(DBContract.CREATE_DB);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -50,7 +52,9 @@ public class DBAdapter {
         {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                     + newVersion + ", which will destroy all old data");
-            db.execSQL("DROP TABLE IF EXISTS contacts");
+            db.execSQL("DROP TABLE IF EXISTS " + DBContract.WorkoutPlanInfo.WORKOUTPLAN_TABLE + ";" +
+                    "DROP TABLE IF EXISTS " + DBContract.MealPlanInfo.MEALPLAN_TABLE + ";" +
+                    "DROP TABLE IF EXISTS " + DBContract.UserInfo.USER_TABLE + ";");
             onCreate(db);
         }
     }
@@ -101,6 +105,74 @@ public class DBAdapter {
         }
         return mCursor;
     }
+
+    public Cursor getUserByUsername(String username) throws SQLException {
+        Cursor mCursor =
+                db.query(true, DBContract.UserInfo.USER_TABLE, new String[] {
+                                DBContract.UserInfo.USER_ID,
+                                DBContract.UserInfo.USER_USERNAME,
+                                DBContract.UserInfo.USER_PASSWORD,
+                                DBContract.UserInfo.USER_FIRSTNAME,
+                                DBContract.UserInfo.USER_LASTNAME,
+                                DBContract.UserInfo.USER_USERTYPE,
+                                DBContract.UserInfo.USER_EMAIL,
+                                DBContract.UserInfo.USER_MEALPLAN,
+                                DBContract.UserInfo.USER_WORKOUTPLAN},
+                        DBContract.UserInfo.USER_USERNAME + "= ?",
+                        new String[] {username}, null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+    public Cursor getUserByEmail(String email) throws SQLException {
+        Cursor mCursor =
+                db.query(true, DBContract.UserInfo.USER_TABLE, new String[] {
+                                DBContract.UserInfo.USER_ID,
+                                DBContract.UserInfo.USER_USERNAME,
+                                DBContract.UserInfo.USER_PASSWORD,
+                                DBContract.UserInfo.USER_FIRSTNAME,
+                                DBContract.UserInfo.USER_LASTNAME,
+                                DBContract.UserInfo.USER_USERTYPE,
+                                DBContract.UserInfo.USER_EMAIL,
+                                DBContract.UserInfo.USER_MEALPLAN,
+                                DBContract.UserInfo.USER_WORKOUTPLAN},
+                        DBContract.UserInfo.USER_EMAIL + "= ?",
+                        new String[] {email}, null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+    public Cursor checkUserLogin(String username, String password) throws SQLException {
+        Cursor mCursor =
+                db.query(true, DBContract.UserInfo.USER_TABLE, new String[] {
+                                DBContract.UserInfo.USER_ID,
+                                DBContract.UserInfo.USER_USERNAME,
+                                DBContract.UserInfo.USER_PASSWORD,
+                                DBContract.UserInfo.USER_FIRSTNAME,
+                                DBContract.UserInfo.USER_LASTNAME,
+                                DBContract.UserInfo.USER_USERTYPE,
+                                DBContract.UserInfo.USER_EMAIL,
+                                DBContract.UserInfo.USER_MEALPLAN,
+                                DBContract.UserInfo.USER_WORKOUTPLAN},
+                        DBContract.UserInfo.USER_USERNAME + "= ?",
+                        new String[] {username}, null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        else {
+            return null;
+        }
+        if(mCursor.getCount() > 0) {
+            if (mCursor.getString(2).equals(password)) {
+                return mCursor;
+            }
+        }
+        return null;
+    }
     
     //---insert a user into the database---
     public long addUser(String username, String password, String firstname, String lastname, String usertype, String email, int mealplan, int workoutplan) {
@@ -114,6 +186,18 @@ public class DBAdapter {
         initialValues.put(DBContract.UserInfo.USER_EMAIL, email);
         initialValues.put(DBContract.UserInfo.USER_MEALPLAN, mealplan);
         initialValues.put(DBContract.UserInfo.USER_WORKOUTPLAN, workoutplan);
+        return db.insert(currentTable, null, initialValues);
+    }
+
+    public long addUser(String username, String password, String firstname, String lastname, String usertype, String email) {
+        currentTable = DBContract.UserInfo.USER_TABLE;
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(DBContract.UserInfo.USER_USERNAME, username);
+        initialValues.put(DBContract.UserInfo.USER_PASSWORD, password);
+        initialValues.put(DBContract.UserInfo.USER_FIRSTNAME, firstname);
+        initialValues.put(DBContract.UserInfo.USER_LASTNAME, lastname);
+        initialValues.put(DBContract.UserInfo.USER_USERTYPE, usertype);
+        initialValues.put(DBContract.UserInfo.USER_EMAIL, email);
         return db.insert(currentTable, null, initialValues);
     }
 
@@ -167,12 +251,14 @@ public class DBAdapter {
     
     //---insert a meal plan into the database---
     public long addMealplan(String name, String desc, String detail) {
+        long boobs = -1;
         currentTable = DBContract.MealPlanInfo.MEALPLAN_TABLE;
         ContentValues initialValues = new ContentValues();
         initialValues.put(DBContract.MealPlanInfo.MEALPLAN_PLANNAME, name);
         initialValues.put(DBContract.MealPlanInfo.MEALPLAN_DESCRIPTION, desc);
         initialValues.put(DBContract.MealPlanInfo.MEALPLAN_DETAILS, detail);
-        return db.insert(currentTable, null, initialValues);
+        boobs = db.insert(currentTable, null, initialValues);
+        return boobs;
     }
 
     //---update meal plan in database---
@@ -182,7 +268,8 @@ public class DBAdapter {
         values.put(DBContract.MealPlanInfo.MEALPLAN_PLANNAME, name);
         values.put(DBContract.MealPlanInfo.MEALPLAN_DESCRIPTION, desc);
         values.put(DBContract.MealPlanInfo.MEALPLAN_DETAILS, detail);
-        return db.update(currentTable, values, DBContract.MealPlanInfo.MEALPLAN_ID + " = " + id, null) > 0;
+        boolean gupta = db.update(currentTable, values, DBContract.MealPlanInfo.MEALPLAN_ID + " = " + id, null) > 0;
+        return gupta;
     }
 
     //---deletes a particular meal plan---
