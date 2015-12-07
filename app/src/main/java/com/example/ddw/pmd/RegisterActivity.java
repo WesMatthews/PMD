@@ -7,6 +7,8 @@ import android.view.View;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private DBAdapter db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

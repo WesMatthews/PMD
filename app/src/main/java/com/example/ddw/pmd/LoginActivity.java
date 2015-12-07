@@ -72,14 +72,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private Intent i;
-    SharedPreferences pref;
+    SharedPreferences pref = getSharedPreferences("userPrefs", Context.MODE_PRIVATE);
     private DBAdapter db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        pref = getSharedPreferences("userPrefs", Context.MODE_PRIVATE);
         i = new Intent(this, DrawerActivity.class);
         int currUser = pref.getInt("currUser", -1);
         if(currUser != -1){
@@ -151,17 +150,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void populateDB(){
-        db.open();
-        db.addMealplan("Low Calorie", "Plan for faster weight loss", "4x carrots, 3cups vinegar");
-        db.addMealplan("Maintenance 1", "Medium intake for daily maintenance", "2ea cookie, 2ea apple");
-        db.addMealplan("Large Caloric Intake", "Designed for building muscle", "1desk cheez-its, 1drum grape jelly");
-        db.addWorkoutplan("New Customer", "Built for people just starting out", "30min Treadmill, 30min Jacobs Ladder");
-        db.addWorkoutplan("Maintenance 1", "Built for people", "36ea 30lbs bicep curls, 30min eliptical");
-        db.addWorkoutplan("Muscle Gain", "Built for rapid muscle gain", "40ea 300lbs bench press, 40ea 800lbs squats");
-        db.addUser("wesm", "password", "Wes", "Matthews", "Trainer", "wm@com.com", 1, 1);
-        db.addUser("darrylr", "password", "Darryl" , "Rutledge", "Client", "dr@com.com", 2, 2);
-        db.addUser("davem", "password", "David", "Murray", "Client", "dm@com.com", 3, 3);
-        db.close();
+        if(pref.getBoolean("populateDB", false)) {
+            db.open();
+            db.addMealplan("Low Calorie", "Plan for faster weight loss", "4x carrots, 3cups vinegar");
+            db.addMealplan("Maintenance 1", "Medium intake for daily maintenance", "2ea cookie, 2ea apple");
+            db.addMealplan("Large Caloric Intake", "Designed for building muscle", "1desk cheez-its, 1drum grape jelly");
+            db.addWorkoutplan("New Customer", "Built for people just starting out", "30min Treadmill, 30min Jacobs Ladder");
+            db.addWorkoutplan("Maintenance 1", "Built for people", "36ea 30lbs bicep curls, 30min eliptical");
+            db.addWorkoutplan("Muscle Gain", "Built for rapid muscle gain", "40ea 300lbs bench press, 40ea 800lbs squats");
+            db.addUser("wesm", "password", "Wes", "Matthews", "Trainer", "wm@com.com", 1, 1);
+            db.addUser("darrylr", "password", "Darryl", "Rutledge", "Client", "dr@com.com", 2, 2);
+            db.addUser("davem", "password", "David", "Murray", "Client", "dm@com.com", 3, 3);
+            db.close();
+            pref.edit().putBoolean("populateDB", true);
+        }
     }
 
     private void populateAutoComplete() {
