@@ -72,6 +72,19 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="New? Register here"
+                android:id="@+id/btnRegister"
+                android:clickable="true"
+                android:paddingTop="15dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#0000AA"
+                android:onClick="register" />
+
         </LinearLayout>
     </ScrollView>
+
 </LinearLayout>
