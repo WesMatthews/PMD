@@ -106,6 +106,46 @@ public class DBAdapter {
         return mCursor;
     }
 
+    public Cursor getUserByUsername(String username) throws SQLException {
+        Cursor mCursor =
+                db.query(true, DBContract.UserInfo.USER_TABLE, new String[] {
+                                DBContract.UserInfo.USER_ID,
+                                DBContract.UserInfo.USER_USERNAME,
+                                DBContract.UserInfo.USER_PASSWORD,
+                                DBContract.UserInfo.USER_FIRSTNAME,
+                                DBContract.UserInfo.USER_LASTNAME,
+                                DBContract.UserInfo.USER_USERTYPE,
+                                DBContract.UserInfo.USER_EMAIL,
+                                DBContract.UserInfo.USER_MEALPLAN,
+                                DBContract.UserInfo.USER_WORKOUTPLAN},
+                        DBContract.UserInfo.USER_USERNAME + "= ?",
+                        new String[] {username}, null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+    public Cursor getUserByEmail(String email) throws SQLException {
+        Cursor mCursor =
+                db.query(true, DBContract.UserInfo.USER_TABLE, new String[] {
+                                DBContract.UserInfo.USER_ID,
+                                DBContract.UserInfo.USER_USERNAME,
+                                DBContract.UserInfo.USER_PASSWORD,
+                                DBContract.UserInfo.USER_FIRSTNAME,
+                                DBContract.UserInfo.USER_LASTNAME,
+                                DBContract.UserInfo.USER_USERTYPE,
+                                DBContract.UserInfo.USER_EMAIL,
+                                DBContract.UserInfo.USER_MEALPLAN,
+                                DBContract.UserInfo.USER_WORKOUTPLAN},
+                        DBContract.UserInfo.USER_EMAIL + "= ?",
+                        new String[] {email}, null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
     public Cursor checkUserLogin(String username, String password) throws SQLException {
         Cursor mCursor =
                 db.query(true, DBContract.UserInfo.USER_TABLE, new String[] {
@@ -146,6 +186,18 @@ public class DBAdapter {
         initialValues.put(DBContract.UserInfo.USER_EMAIL, email);
         initialValues.put(DBContract.UserInfo.USER_MEALPLAN, mealplan);
         initialValues.put(DBContract.UserInfo.USER_WORKOUTPLAN, workoutplan);
+        return db.insert(currentTable, null, initialValues);
+    }
+
+    public long addUser(String username, String password, String firstname, String lastname, String usertype, String email) {
+        currentTable = DBContract.UserInfo.USER_TABLE;
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(DBContract.UserInfo.USER_USERNAME, username);
+        initialValues.put(DBContract.UserInfo.USER_PASSWORD, password);
+        initialValues.put(DBContract.UserInfo.USER_FIRSTNAME, firstname);
+        initialValues.put(DBContract.UserInfo.USER_LASTNAME, lastname);
+        initialValues.put(DBContract.UserInfo.USER_USERTYPE, usertype);
+        initialValues.put(DBContract.UserInfo.USER_EMAIL, email);
         return db.insert(currentTable, null, initialValues);
     }
 
