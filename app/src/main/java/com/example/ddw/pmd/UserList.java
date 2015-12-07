@@ -1,8 +1,8 @@
 package com.example.ddw.pmd;
 
 import android.app.Activity;
-import android.app.ListFragment;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,70 +14,29 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.example.ddw.pmd.dummy.DummyContent;
+import java.util.ArrayList;
+import java.util.Collections;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Large screen devices (such as tablets) are supported by replacing the ListView
- * with a GridView.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
- * interface.
- */
+import com.example.ddw.pmd.dtos.*;
+
 public class UserList extends Fragment implements AbsListView.OnItemClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    DBAdapter db;
     private OnFragmentInteractionListener mListener;
-
-    /**
-     * The fragment's ListView/GridView.
-     */
     private AbsListView mListView;
-
-    /**
-     * The Adapter which will be used to populate the ListView/GridView with
-     * Views.
-     */
     private ListAdapter mAdapter;
 
-    // TODO: Rename and change types of parameters
-    public static UserList newInstance(String param1, String param2) {
-        UserList fragment = new UserList();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public UserList() {
-    }
+    public UserList() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivity().setTitle("User List");
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        db = new DBAdapter(this.getContext());
+        db.open();
 
-        // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
+        mAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, getUsers());
     }
 
     @Override
@@ -87,8 +46,7 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
-
+        mListView.setAdapter(mAdapter);
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
 
@@ -97,14 +55,10 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
 
     @Override
     public void onAttach(Context context) {
-
         super.onAttach(context);
-
         Activity a;
-
         if (context instanceof Activity) {
             a = (Activity) context;
-
             try {
                 mListener = (OnFragmentInteractionListener) a;
             } catch (ClassCastException e) {
@@ -164,6 +118,24 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onArticleSelected(int position);
+    }
+
+    public ArrayList<String> getUsers() {
+        ArrayList<String> users = new ArrayList<>();
+        Cursor c = db.getAllUsers();
+        if (c.moveToFirst())
+        {
+            do {
+                userDTO user = new userDTO();
+                user.setFirstname(c.getString(3));
+                user.setLastname(c.getString(4));
+                users.add(user.toString());
+            } while (c.moveToNext());
+        }
+        db.close();
+        Collections.sort(users);
+        return users;
+
     }
 
 }
