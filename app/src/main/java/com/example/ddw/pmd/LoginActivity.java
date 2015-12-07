@@ -72,13 +72,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private Intent i;
-    SharedPreferences pref = getSharedPreferences("userPrefs", Context.MODE_PRIVATE);
+    SharedPreferences pref;
     private DBAdapter db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        pref = getSharedPreferences("userPrefs", Context.MODE_PRIVATE);
         i = new Intent(this, DrawerActivity.class);
         int currUser = pref.getInt("currUser", -1);
         if(currUser != -1){
@@ -150,7 +151,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void populateDB(){
-        if(pref.getBoolean("populateDB", false)) {
+        if(pref.getBoolean("populateDB", true)) {
             db.open();
             db.addMealplan("Low Calorie", "Plan for faster weight loss", "4x carrots, 3cups vinegar");
             db.addMealplan("Maintenance 1", "Medium intake for daily maintenance", "2ea cookie, 2ea apple");
@@ -162,7 +163,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             db.addUser("darrylr", "password", "Darryl", "Rutledge", "Client", "dr@com.com", 2, 2);
             db.addUser("davem", "password", "David", "Murray", "Client", "dm@com.com", 3, 3);
             db.close();
-            pref.edit().putBoolean("populateDB", true);
+            pref.edit().putBoolean("populateDB", false).apply();
         }
     }
 
