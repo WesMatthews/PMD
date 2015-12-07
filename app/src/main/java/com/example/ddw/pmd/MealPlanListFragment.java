@@ -13,18 +13,30 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ddw.pmd.dtos.mealplanDTO;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class MealPlanListFragment extends Fragment implements AbsListView.OnItemClickListener {
+
+    public class CustomComparator implements Comparator<mealplanDTO> {
+        @Override
+        public int compare(mealplanDTO m1, mealplanDTO m2) {
+            String first = m1.getPlanname() + m1.getDescription();
+            String second = m2.getPlanname() + m2.getDescription();
+            return first.compareTo(second);
+        }
+    }
 
     DBAdapter db;
     private OnFragmentInteractionListener mListener;
     private AbsListView mListView;
     private ListAdapter mAdapter;
+    private ArrayList<mealplanDTO> allMeals;
 
     public MealPlanListFragment() {}
 
@@ -34,7 +46,7 @@ public class MealPlanListFragment extends Fragment implements AbsListView.OnItem
         getActivity().setTitle("Meal Plan List");
         db = new DBAdapter(this.getContext());
         db.open();
-
+        allMeals = new ArrayList<>();
         mAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, getMeals());
     }
@@ -90,6 +102,10 @@ public class MealPlanListFragment extends Fragment implements AbsListView.OnItem
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
             mListener.onArticleSelected(position);
+            mealplanDTO meal = allMeals.get(position);
+            Toast.makeText(getContext(), meal.getPlanname() + "\n" +
+                    meal.getDescription() + "\n" +
+                    meal.getDetails(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -127,13 +143,17 @@ public class MealPlanListFragment extends Fragment implements AbsListView.OnItem
         if (c.moveToFirst()) {
             do {
                 mealplanDTO meal = new mealplanDTO();
+                meal.setId(c.getInt(0));
                 meal.setPlanname(c.getString(1));
                 meal.setDescription(c.getString(2));
+                meal.setDetails(c.getString(3));
+                allMeals.add(meal);
                 meals.add(meal.toString());
             } while (c.moveToNext());
         }
         db.close();
         Collections.sort(meals);
+        Collections.sort(allMeals, new CustomComparator());
         return meals;
     }
 
