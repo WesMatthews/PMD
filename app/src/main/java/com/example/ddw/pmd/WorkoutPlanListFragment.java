@@ -101,14 +101,11 @@ public class WorkoutPlanListFragment extends Fragment implements AbsListView.OnI
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onWorkoutArticleSelected(position);
+
             workoutplanDTO workout = allWorkouts.get(position);
+            mListener.onWorkoutArticleSelected(workout.getId());
            // frag = new WorkoutPlanDetailsFragment();
            // getFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
-
-            Toast.makeText(getContext(), workout.getPlanname() + "\n" +
-                    workout.getDescription() + "\n" +
-                    workout.getDetails(), Toast.LENGTH_LONG).show();
 
         }
     }
@@ -156,8 +153,8 @@ public class WorkoutPlanListFragment extends Fragment implements AbsListView.OnI
             } while (c.moveToNext());
         }
         db.close();
-        //Collections.sort(workouts);
-        //Collections.sort(allWorkouts, new CustomComparator());
+        Collections.sort(workouts);
+        Collections.sort(allWorkouts, new CustomComparator());
         return workouts;
     }
 

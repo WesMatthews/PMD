@@ -122,18 +122,18 @@ public class DrawerActivity extends AppCompatActivity
         //do things;
     }
 
-    public void onMealArticleSelected(int position){
+    public void onMealArticleSelected(int mealid){
         frag = new MealPlanDetailsFragment();
         Bundle args = new Bundle();
-        args.putInt("position", position);
+        args.putInt("id", mealid);
         frag.setArguments(args);
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
 
     }
-    public void onWorkoutArticleSelected(int position){
+    public void onWorkoutArticleSelected(int workoutid){
         frag = new WorkoutPlanDetailsFragment();
         Bundle args = new Bundle();
-        args.putInt("position", position);
+        args.putInt("id", workoutid);
         frag.setArguments(args);
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
     }

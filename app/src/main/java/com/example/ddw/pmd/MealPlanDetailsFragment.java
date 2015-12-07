@@ -25,12 +25,12 @@ public class MealPlanDetailsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     static final String TAG = "MealPlanDetails";
-    private static final String ARG_POSITION = "position";
+    private static final String ARG_ID = "id";
     private static final String ARG_PARAM2 = "param2";
     View view;
     DBAdapter db;
     // TODO: Rename and change types of parameters
-    private int pos = -1;
+    private int id = -1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
@@ -47,7 +47,7 @@ public class MealPlanDetailsFragment extends Fragment {
     public static MealPlanDetailsFragment newInstance(int param1) {
         MealPlanDetailsFragment fragment = new MealPlanDetailsFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_POSITION, -1);
+        args.putInt(ARG_ID, -1);
      //   args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -68,7 +68,7 @@ public class MealPlanDetailsFragment extends Fragment {
 
 
         if (getArguments() != null) {
-            pos = getArguments().getInt(ARG_POSITION);
+            id = getArguments().getInt(ARG_ID);
            // mParam2 = getArguments().getString(ARG_PARAM2);
 
         }
@@ -79,7 +79,7 @@ public class MealPlanDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_meal_plan_details, container, false);
-        if(pos > -1)
+        if(id > -1)
             setMealDetails();
         return view;
     }
@@ -122,18 +122,15 @@ public class MealPlanDetailsFragment extends Fragment {
         // TODO: Update argument type and name
         public void onArticleSelected(int position);
     }
+
     private void setMealDetails(){
-      //  TextView txtName = (TextView)view.findViewById(R.id.txtName);
-        Log.v(TAG,"Entering setMealDetails()");
+
         TextView planName = (TextView)view.findViewById(R.id.Plan_Name);
         TextView planDescript = (TextView)view.findViewById(R.id.Plan_Descript);
         TextView planSummary = (TextView)view.findViewById(R.id.Plan_Summary);
         db.open();
-        Log.v(TAG,"************************* position is" + pos);
-        Cursor c = db.getAllMealplans();
-        Log.v(TAG,"************************* Cursor"+c.getCount());
-        if(c.moveToPosition(pos)){
-            Log.v(TAG,"************* entered IF BLOCK");
+        Cursor c = db.getMealplan(id);
+        if(c.moveToFirst()){
             planName.setText(c.getString(1));
             planDescript.setText(c.getString(2));
             planSummary.setText(c.getString(3));

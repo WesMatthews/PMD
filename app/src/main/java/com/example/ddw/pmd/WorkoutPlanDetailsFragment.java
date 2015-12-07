@@ -24,12 +24,12 @@ public class WorkoutPlanDetailsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     static final String TAG = "WorkoutPlanDetails";
-    private static final String ARG_POSITION = "position";
+    private static final String ARG_ID = "id";
     private static final String ARG_PARAM2 = "param2";
     DBAdapter db;
     View view;
     // TODO: Rename and change types of parameters
-    private int pos = -1;
+    private int id = -1;
     //private String mParam2;
 
     private OnFragmentInteractionListener mListener;
@@ -50,7 +50,7 @@ public class WorkoutPlanDetailsFragment extends Fragment {
     public static WorkoutPlanDetailsFragment newInstance(String param1) {
         WorkoutPlanDetailsFragment fragment = new WorkoutPlanDetailsFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_POSITION, -1);
+        args.putInt(ARG_ID, -1);
         //args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -62,7 +62,7 @@ public class WorkoutPlanDetailsFragment extends Fragment {
         getActivity().setTitle("Meal Plan Details");
         db = new DBAdapter(this.getContext());
         if (getArguments() != null) {
-            pos = getArguments().getInt(ARG_POSITION);
+            id = getArguments().getInt(ARG_ID);
         }
     }
 
@@ -71,7 +71,7 @@ public class WorkoutPlanDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_workout_plan_details, container, false);
         // Inflate the layout for this fragment
-        if(pos > -1)
+        if(id > -1)
             setWorkoutDetails();
         return view;
     }
@@ -116,19 +116,14 @@ public class WorkoutPlanDetailsFragment extends Fragment {
     }
 
     private void setWorkoutDetails(){
-        Log.v(TAG, "Entering setMealDetails()");
         TextView planName = (TextView)view.findViewById(R.id.Plan_Name);
         TextView planDescript = (TextView)view.findViewById(R.id.Plan_Descript);
         TextView planSummary = (TextView)view.findViewById(R.id.Plan_Summary);
         db.open();
-        Log.v(TAG,"************************* position is" + pos);
-        Cursor c = db.getAllWorkoutplans();
-        Log.v(TAG,"************************* Cursor"+c.getCount());
-        Log.v(TAG,"************** Cursor"+c.getPosition());
-        if(c.moveToPosition(pos)){
-            Log.v(TAG,"************* entered IF BLOCK");
+
+        Cursor c = db.getWorkoutplan(id);
+        if(c.moveToFirst()){
             planName.setText(c.getString(1));
-            Log.v(TAG, "Workout Name: " + c.getString(1));
             planDescript.setText(c.getString(2));
             planSummary.setText(c.getString(3));
         }

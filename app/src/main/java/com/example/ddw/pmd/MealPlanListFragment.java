@@ -101,9 +101,10 @@ public class MealPlanListFragment extends Fragment implements AbsListView.OnItem
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onMealArticleSelected(position);
+
 
             mealplanDTO meal = allMeals.get(position);
+            mListener.onMealArticleSelected(meal.getId());
           //  frag = new MealPlanDetailsFragment();
            // getFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
             Toast.makeText(getContext(), meal.getPlanname() + "\n" +
@@ -156,8 +157,8 @@ public class MealPlanListFragment extends Fragment implements AbsListView.OnItem
             } while (c.moveToNext());
         }
         db.close();
-        //Collections.sort(meals);
-        //Collections.sort(allMeals, new CustomComparator());
+        Collections.sort(meals);
+        Collections.sort(allMeals, new CustomComparator());
         return meals;
     }
 
