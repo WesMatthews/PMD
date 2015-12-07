@@ -1,5 +1,7 @@
 package com.example.ddw.pmd.dtos;
 
+import android.os.Parcelable;
+
 /**
  * Created by Darryl on 12/6/2015.
  */

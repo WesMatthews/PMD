@@ -18,9 +18,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.ddw.pmd.dtos.mealplanDTO;
+
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, UserList.OnFragmentInteractionListener,
-        MealPlanListFragment.OnFragmentInteractionListener, WorkoutPlanListFragment.OnFragmentInteractionListener{
+        MealPlanListFragment.OnFragmentInteractionListener, WorkoutPlanListFragment.OnFragmentInteractionListener,
+        WorkoutPlanDetailsFragment.OnFragmentInteractionListener, MealPlanDetailsFragment.OnFragmentInteractionListener{
 
     Fragment frag = null;
     SharedPreferences pref;
@@ -113,7 +116,25 @@ public class DrawerActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
     public void onArticleSelected(int position)  {
         //do things;
+    }
+
+    public void onMealArticleSelected(int mealid){
+        frag = new MealPlanDetailsFragment();
+        Bundle args = new Bundle();
+        args.putInt("id", mealid);
+        frag.setArguments(args);
+        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
+
+    }
+    public void onWorkoutArticleSelected(int workoutid){
+        frag = new WorkoutPlanDetailsFragment();
+        Bundle args = new Bundle();
+        args.putInt("id", workoutid);
+        frag.setArguments(args);
+        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
     }
 }
