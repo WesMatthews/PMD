@@ -18,6 +18,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.ddw.pmd.dtos.mealplanDTO;
+
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, UserList.OnFragmentInteractionListener,
         MealPlanListFragment.OnFragmentInteractionListener, WorkoutPlanListFragment.OnFragmentInteractionListener,
@@ -118,5 +120,14 @@ public class DrawerActivity extends AppCompatActivity
 
     public void onArticleSelected(int position)  {
         //do things;
+    }
+
+    public void onMealArticleSelected(int position){
+        frag = new MealPlanDetailsFragment();
+        Bundle args = new Bundle();
+        args.putInt("position", position);
+        frag.setArguments(args);
+        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
+
     }
 }

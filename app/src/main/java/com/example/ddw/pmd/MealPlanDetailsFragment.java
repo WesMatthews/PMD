@@ -2,12 +2,15 @@ package com.example.ddw.pmd;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /**
@@ -21,11 +24,13 @@ import android.view.ViewGroup;
 public class MealPlanDetailsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
+    static final String TAG = "MealPlanDetails";
+    private static final String ARG_POSITION = "position";
     private static final String ARG_PARAM2 = "param2";
-
+    View view;
+    DBAdapter db;
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private int pos = -1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
@@ -35,15 +40,15 @@ public class MealPlanDetailsFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     *
      * @return A new instance of fragment MealPlanDetailsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MealPlanDetailsFragment newInstance(String param1, String param2) {
+    public static MealPlanDetailsFragment newInstance(int param1) {
         MealPlanDetailsFragment fragment = new MealPlanDetailsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(ARG_POSITION, 1);
+     //   args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,9 +61,16 @@ public class MealPlanDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivity().setTitle("Meal Plan Details");
+
+        db = new DBAdapter(this.getContext());
+
+
+
+
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            pos = getArguments().getInt(ARG_POSITION);
+           // mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
@@ -66,7 +78,10 @@ public class MealPlanDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_meal_plan_details, container, false);
+        view = inflater.inflate(R.layout.fragment_meal_plan_details, container, false);
+        if(pos > -1)
+            setMealDetails();
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -107,5 +122,22 @@ public class MealPlanDetailsFragment extends Fragment {
         // TODO: Update argument type and name
         public void onArticleSelected(int position);
     }
-
+    private void setMealDetails(){
+      //  TextView txtName = (TextView)view.findViewById(R.id.txtName);
+        Log.v(TAG,"Entering setMealDetails()");
+        TextView planName = (TextView)view.findViewById(R.id.Plan_Name);
+        TextView planDescript = (TextView)view.findViewById(R.id.Plan_Descript);
+        TextView planSummary = (TextView)view.findViewById(R.id.Plan_Summary);
+        db.open();
+        Log.v(TAG,"************************* position is" + pos);
+        Cursor c = db.getAllMealplans();
+        Log.v(TAG,"************************* Cursor"+c.getCount());
+        if(c.moveToPosition(pos)){
+            Log.v(TAG,"************* entered IF BLOCK");
+            planName.setText(c.getString(1));
+            planDescript.setText(c.getString(2));
+            planSummary.setText(c.getString(3));
+        }
+        db.close();
+    }
 }
