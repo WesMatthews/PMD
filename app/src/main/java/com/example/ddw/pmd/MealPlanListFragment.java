@@ -37,7 +37,7 @@ public class MealPlanListFragment extends Fragment implements AbsListView.OnItem
     private AbsListView mListView;
     private ListAdapter mAdapter;
     private ArrayList<mealplanDTO> allMeals;
-
+    Fragment frag = null;
     public MealPlanListFragment() {}
 
     @Override
@@ -103,9 +103,12 @@ public class MealPlanListFragment extends Fragment implements AbsListView.OnItem
             // fragment is attached to one) that an item has been selected.
             mListener.onArticleSelected(position);
             mealplanDTO meal = allMeals.get(position);
+            frag = new MealPlanDetailsFragment();
+            getFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
             Toast.makeText(getContext(), meal.getPlanname() + "\n" +
                     meal.getDescription() + "\n" +
                     meal.getDetails(), Toast.LENGTH_LONG).show();
+
         }
     }
 

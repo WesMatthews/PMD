@@ -38,7 +38,7 @@ public class WorkoutPlanListFragment extends Fragment implements AbsListView.OnI
     private AbsListView mListView;
     private ListAdapter mAdapter;
     private ArrayList<workoutplanDTO> allWorkouts;
-
+    Fragment frag = null;
     public WorkoutPlanListFragment() {}
 
     @Override
@@ -103,6 +103,9 @@ public class WorkoutPlanListFragment extends Fragment implements AbsListView.OnI
             // fragment is attached to one) that an item has been selected.
             mListener.onArticleSelected(position);
             workoutplanDTO workout = allWorkouts.get(position);
+            frag = new WorkoutPlanDetailsFragment();
+            getFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
+
             Toast.makeText(getContext(), workout.getPlanname() + "\n" +
                     workout.getDescription() + "\n" +
                     workout.getDetails(), Toast.LENGTH_LONG).show();

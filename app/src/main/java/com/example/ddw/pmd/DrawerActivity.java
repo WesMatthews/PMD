@@ -20,7 +20,8 @@ import android.view.MenuItem;
 
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, UserList.OnFragmentInteractionListener,
-        MealPlanListFragment.OnFragmentInteractionListener, WorkoutPlanListFragment.OnFragmentInteractionListener{
+        MealPlanListFragment.OnFragmentInteractionListener, WorkoutPlanListFragment.OnFragmentInteractionListener,
+        WorkoutPlanDetailsFragment.OnFragmentInteractionListener, MealPlanDetailsFragment.OnFragmentInteractionListener{
 
     Fragment frag = null;
     SharedPreferences pref;
@@ -113,6 +114,8 @@ public class DrawerActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
     public void onArticleSelected(int position)  {
         //do things;
     }

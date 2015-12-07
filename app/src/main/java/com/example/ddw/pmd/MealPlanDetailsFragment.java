@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,11 +70,11 @@ public class MealPlanDetailsFragment extends Fragment {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+    //public void onButtonPressed(Uri uri) {
+    //    if (mListener != null) {
+    //       mListener.onFragmentInteraction(uri);
+    //    }
+    //}
 
     @Override
     public void onAttach(Context context) {
@@ -105,7 +105,7 @@ public class MealPlanDetailsFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onArticleSelected(int position);
     }
 
 }
