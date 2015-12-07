@@ -25,4 +25,8 @@
                             When a trainer logs in, they will be presented with a list of their clients which they can
                             check on or update their information.  When a client logs in, they will be presented
                             with there own profile page.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
