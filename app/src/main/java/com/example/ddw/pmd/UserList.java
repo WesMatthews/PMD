@@ -13,18 +13,30 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 import com.example.ddw.pmd.dtos.*;
 
 public class UserList extends Fragment implements AbsListView.OnItemClickListener {
 
+    public class CustomComparator implements Comparator<userDTO> {
+        @Override
+        public int compare(userDTO u1, userDTO u2) {
+            String first = u1.getFirstname() + u1.getLastname();
+            String second = u2.getFirstname() + u2.getLastname();
+            return first.compareTo(second);
+        }
+    }
+
     DBAdapter db;
     private OnFragmentInteractionListener mListener;
     private AbsListView mListView;
     private ListAdapter mAdapter;
+    private ArrayList<userDTO> allUsers;
 
     public UserList() {}
 
@@ -34,6 +46,7 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
         getActivity().setTitle("User List");
         db = new DBAdapter(this.getContext());
         db.open();
+        allUsers = new ArrayList<>();
 
         mAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, getUsers());
@@ -89,6 +102,12 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
             // fragment is attached to one) that an item has been selected.
            // mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
             mListener.onArticleSelected(position);
+            userDTO user = allUsers.get(position);
+            Toast.makeText(getContext(), user.getFirstname() + " " +
+                    user.getLastname() + "\n" +
+                    user.getUsertype(), Toast.LENGTH_LONG).show();
+
+
         }
     }
 
@@ -127,15 +146,23 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
         {
             do {
                 userDTO user = new userDTO();
+                user.setId(c.getInt(0));
+                user.setUsername(c.getString(1));
+                user.setPassword(c.getString(2));
                 user.setFirstname(c.getString(3));
                 user.setLastname(c.getString(4));
+                user.setUsertype(c.getString(5));
+                user.setEmail(c.getString(6));
+                user.setMealplan(c.getInt(7));
+                user.setWorkoutplan(c.getInt(8));
+                allUsers.add(user);
                 users.add(user.toString());
             } while (c.moveToNext());
         }
         db.close();
         Collections.sort(users);
+        Collections.sort(allUsers, new CustomComparator());
         return users;
-
     }
 
 }

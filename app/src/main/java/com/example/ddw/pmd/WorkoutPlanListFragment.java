@@ -13,18 +13,31 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ddw.pmd.dtos.workoutplanDTO;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class WorkoutPlanListFragment extends Fragment implements AbsListView.OnItemClickListener {
+
+    public class CustomComparator implements Comparator<workoutplanDTO> {
+        @Override
+        public int compare(workoutplanDTO w1, workoutplanDTO w2) {
+            String first = w1.getPlanname() + w1.getDescription();
+            String second = w2.getPlanname() + w2.getDescription();
+            return first.compareTo(second);
+        }
+    }
 
     DBAdapter db;
     private OnFragmentInteractionListener mListener;
     private AbsListView mListView;
     private ListAdapter mAdapter;
+    private ArrayList<workoutplanDTO> allWorkouts;
 
     public WorkoutPlanListFragment() {}
 
@@ -34,7 +47,7 @@ public class WorkoutPlanListFragment extends Fragment implements AbsListView.OnI
         getActivity().setTitle("Workout Plan List");
         db = new DBAdapter(this.getContext());
         db.open();
-
+        allWorkouts = new ArrayList<>();
         mAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, getWorkouts());
     }
@@ -89,6 +102,11 @@ public class WorkoutPlanListFragment extends Fragment implements AbsListView.OnI
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
             mListener.onArticleSelected(position);
+            workoutplanDTO workout = allWorkouts.get(position);
+            Toast.makeText(getContext(), workout.getPlanname() + "\n" +
+                    workout.getDescription() + "\n" +
+                    workout.getDetails(), Toast.LENGTH_LONG).show();
+
         }
     }
 
@@ -126,13 +144,17 @@ public class WorkoutPlanListFragment extends Fragment implements AbsListView.OnI
         if (c.moveToFirst()) {
             do {
                 workoutplanDTO workout = new workoutplanDTO();
+                workout.setId(c.getInt(0));
                 workout.setPlanname(c.getString(1));
                 workout.setDescription(c.getString(2));
+                workout.setDetails(c.getString(3));
+                allWorkouts.add(workout);
                 workouts.add(workout.toString());
             } while (c.moveToNext());
         }
         db.close();
         Collections.sort(workouts);
+        Collections.sort(allWorkouts, new CustomComparator());
         return workouts;
     }
 
