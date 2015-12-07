@@ -47,7 +47,7 @@ public class MealPlanDetailsFragment extends Fragment {
     public static MealPlanDetailsFragment newInstance(int param1) {
         MealPlanDetailsFragment fragment = new MealPlanDetailsFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_POSITION, 1);
+        args.putInt(ARG_POSITION, -1);
      //   args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;

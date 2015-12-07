@@ -156,8 +156,8 @@ public class MealPlanListFragment extends Fragment implements AbsListView.OnItem
             } while (c.moveToNext());
         }
         db.close();
-        Collections.sort(meals);
-        Collections.sort(allMeals, new CustomComparator());
+        //Collections.sort(meals);
+        //Collections.sort(allMeals, new CustomComparator());
         return meals;
     }
 

@@ -130,4 +130,11 @@ public class DrawerActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
 
     }
+    public void onWorkoutArticleSelected(int position){
+        frag = new WorkoutPlanDetailsFragment();
+        Bundle args = new Bundle();
+        args.putInt("position", position);
+        frag.setArguments(args);
+        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
+    }
 }
