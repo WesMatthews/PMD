@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,8 +59,8 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
     public static UserList newInstance(String param1, String param2) {
         UserList fragment = new UserList();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(DBContract.UserInfo.USER_FIRSTNAME, "Hello");
+        args.putString(ARG_PARAM2, "World");
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,14 +77,15 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
         super.onCreate(savedInstanceState);
         getActivity().setTitle("User List");
         db = new DBAdapter(this.getContext());
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        db.open();
 
         // TODO: Change Adapter to display your content
         mAdapter = new ArrayAdapter<userDTO>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, getUsers());
+
+        if(mAdapter.isEmpty())
+            getActivity().setTitle("Adapter is Empty as Fuck");
+
     }
 
     @Override
@@ -189,6 +191,7 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
                 user.setMealplan(c.getInt(7));
                 user.setWorkoutplan(c.getInt(8));
                 users.add(user);
+                Log.d("************ Username: ", user.getUsername());
             } while (c.moveToNext());
         }
         db.close();

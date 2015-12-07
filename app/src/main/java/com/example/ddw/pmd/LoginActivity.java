@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -84,10 +85,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if(!currUser.equals("")){
             startActivity(i);
         }
-
+        //DeleteDB();
         db = new DBAdapter(this);
         // get the existing database file or from assets folder if doesn't exist
         getDB();
+        populateDB();
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -122,6 +124,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         try {
             String destPath = "/data/data/" + getPackageName() +
                     "/databases";
+            String dbPath = destPath + "/PMDdb";
+            File dbFile = new File(dbPath);
             File f = new File(destPath);
             if (!f.exists()) {
                 f.mkdirs();
@@ -142,7 +146,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void populateDB(){
-        db.addMealplan("Low Calorie", "Plan for faster weight loss", "4x carrots, 3cups vinegar, ");
+        db.open();
+        db.addMealplan("Low Calorie", "Plan for faster weight loss", "4x carrots, 3cups vinegar");
         db.addMealplan("Maintenance 1", "Medium intake for daily maintenance", "2ea cookie, 2ea apple");
         db.addMealplan("Large Caloric Intake", "Designed for building muscle", "1desk cheez-its, 1drum grape jelly");
         db.addWorkoutplan("New Customer", "Built for people just starting out", "30min Treadmill, 30min Jacobs Ladder");
@@ -151,6 +156,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         db.addUser("wesm", "password", "Wes", "Matthews", "Trainer", "wm@com.com", 1, 1);
         db.addUser("darrylr", "password", "Darryl" , "Rutledge", "Client", "dr@com.com", 2, 2);
         db.addUser("davem", "password", "David", "Murray", "Client", "dm@com.com", 3, 3);
+        db.close();
     }
 
     private void populateAutoComplete() {
@@ -420,6 +426,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         inputStream.close();
         outputStream.close();
+    }
+
+    private void DeleteDB() {
+        this.getApplicationContext().deleteDatabase("PMDdb");
+        Log.d("**********DB", " deleted");
     }
 }
 
