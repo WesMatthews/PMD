@@ -81,8 +81,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
         pref = getSharedPreferences("userPrefs", Context.MODE_PRIVATE);
         i = new Intent(this, DrawerActivity.class);
-        String currUser = pref.getString("currUser", "");
-        if(!currUser.equals("")){
+        int currUser = pref.getInt("currUser", -1);
+        if(currUser != -1){
             startActivity(i);
         }
         DeleteDB();
@@ -120,6 +120,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    public void register(View view) {
+        Intent i = new Intent(this, RegisterActivity.class);
+        startActivity(i);
+    }
+
     private void getDB() {
         try {
             String destPath = "/data/data/" + getPackageName() +
@@ -146,17 +151,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void populateDB(){
-        db.open();
-        db.addMealplan("Low Calorie", "Plan for faster weight loss", "4x carrots, 3cups vinegar");
-        db.addMealplan("Maintenance 1", "Medium intake for daily maintenance", "2ea cookie, 2ea apple");
-        db.addMealplan("Large Caloric Intake", "Designed for building muscle", "1desk cheez-its, 1drum grape jelly");
-        db.addWorkoutplan("New Customer", "Built for people just starting out", "30min Treadmill, 30min Jacobs Ladder");
-        db.addWorkoutplan("Maintenance 1", "Built for people", "36ea 30lbs bicep curls, 30min eliptical");
-        db.addWorkoutplan("Muscle Gain", "Built for rapid muscle gain", "40ea 300lbs bench press, 40ea 800lbs squats");
-        db.addUser("wesm", "password", "Wes", "Matthews", "Trainer", "wm@com.com", 1, 1);
-        db.addUser("darrylr", "password", "Darryl" , "Rutledge", "Client", "dr@com.com", 2, 2);
-        db.addUser("davem", "password", "David", "Murray", "Client", "dm@com.com", 3, 3);
-        db.close();
+        if(pref.getBoolean("populateDB", true)) {
+            db.open();
+            db.addMealplan("Low Calorie", "Plan for faster weight loss", "4x carrots, 3cups vinegar");
+            db.addMealplan("Maintenance 1", "Medium intake for daily maintenance", "2ea cookie, 2ea apple");
+            db.addMealplan("Large Caloric Intake", "Designed for building muscle", "1desk cheez-its, 1drum grape jelly");
+            db.addWorkoutplan("New Customer", "Built for people just starting out", "30min Treadmill, 30min Jacobs Ladder");
+            db.addWorkoutplan("Maintenance 1", "Built for people", "36ea 30lbs bicep curls, 30min eliptical");
+            db.addWorkoutplan("Muscle Gain", "Built for rapid muscle gain", "40ea 300lbs bench press, 40ea 800lbs squats");
+            db.addUser("wesm", "password", "Wes", "Matthews", "Trainer", "wm@com.com", 1, 1);
+            db.addUser("darrylr", "password", "Darryl", "Rutledge", "Client", "dr@com.com", 2, 2);
+            db.addUser("davem", "password", "David", "Murray", "Client", "dm@com.com", 3, 3);
+            db.close();
+            pref.edit().putBoolean("populateDB", false).apply();
+        }
     }
 
     private void populateAutoComplete() {
@@ -236,10 +244,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
         }
 
         if (cancel) {
@@ -254,11 +258,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask.execute((Void) null);
         }
 
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
@@ -380,16 +379,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             } catch (InterruptedException e) {
                 return false;
             }
+            Cursor c = null;
+            db.open();
+            c = db.checkUserLogin(mEmail, mPassword);
+            db.close();
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
+            if(c != null){
+                SharedPreferences.Editor edit = pref.edit();
+                edit.putInt("currUser", c.getInt(0)).apply();
+                return true;
             }
 
-            // TODO: register the new account here.
             return false;
         }
 
@@ -399,8 +399,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                SharedPreferences.Editor edit = pref.edit();
-                edit.putString("currUser", "tempUser").apply();
                 startActivity(i);
                 finish();
             } else {
