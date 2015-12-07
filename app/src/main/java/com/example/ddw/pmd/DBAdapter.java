@@ -39,9 +39,9 @@ public class DBAdapter {
         public void onCreate(SQLiteDatabase db)
         {
             try {
-                String boobs = DBContract.CREATE_DB;
-                Log.d("Script: ", DBContract.CREATE_DB);
-                db.execSQL(DBContract.CREATE_DB);
+                db.execSQL(DBContract.UserInfo.CREATETABLE_USERS);
+                db.execSQL(DBContract.MealPlanInfo.CREATETABLE_MEALPLANS);
+                db.execSQL(DBContract.WorkoutPlanInfo.CREATETABLE_WORKOUTPLANS);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -251,14 +251,12 @@ public class DBAdapter {
     
     //---insert a meal plan into the database---
     public long addMealplan(String name, String desc, String detail) {
-        long boobs = -1;
         currentTable = DBContract.MealPlanInfo.MEALPLAN_TABLE;
         ContentValues initialValues = new ContentValues();
         initialValues.put(DBContract.MealPlanInfo.MEALPLAN_PLANNAME, name);
         initialValues.put(DBContract.MealPlanInfo.MEALPLAN_DESCRIPTION, desc);
         initialValues.put(DBContract.MealPlanInfo.MEALPLAN_DETAILS, detail);
-        boobs = db.insert(currentTable, null, initialValues);
-        return boobs;
+        return db.insert(currentTable, null, initialValues);
     }
 
     //---update meal plan in database---
@@ -268,8 +266,7 @@ public class DBAdapter {
         values.put(DBContract.MealPlanInfo.MEALPLAN_PLANNAME, name);
         values.put(DBContract.MealPlanInfo.MEALPLAN_DESCRIPTION, desc);
         values.put(DBContract.MealPlanInfo.MEALPLAN_DETAILS, detail);
-        boolean gupta = db.update(currentTable, values, DBContract.MealPlanInfo.MEALPLAN_ID + " = " + id, null) > 0;
-        return gupta;
+        return db.update(currentTable, values, DBContract.MealPlanInfo.MEALPLAN_ID + " = " + id, null) > 0;
     }
 
     //---deletes a particular meal plan---

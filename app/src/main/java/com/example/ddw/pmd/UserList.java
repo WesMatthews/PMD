@@ -1,12 +1,10 @@
 package com.example.ddw.pmd;
 
 import android.app.Activity;
-import android.app.ListFragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,62 +13,32 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
-//import com.example.ddw.pmd.dummy.DummyContent;
 import com.example.ddw.pmd.dtos.*;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Large screen devices (such as tablets) are supported by replacing the ListView
- * with a GridView.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
- * interface.
- */
 public class UserList extends Fragment implements AbsListView.OnItemClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    public class CustomComparator implements Comparator<userDTO> {
+        @Override
+        public int compare(userDTO u1, userDTO u2) {
+            String first = u1.getFirstname() + u1.getLastname();
+            String second = u2.getFirstname() + u2.getLastname();
+            return first.compareTo(second);
+        }
+    }
+
     DBAdapter db;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private OnFragmentInteractionListener mListener;
-
-    /**
-     * The fragment's ListView/GridView.
-     */
     private AbsListView mListView;
-
-    /**
-     * The Adapter which will be used to populate the ListView/GridView with
-     * Views.
-     */
     private ListAdapter mAdapter;
+    private ArrayList<userDTO> allUsers;
 
-    // TODO: Rename and change types of parameters
-    public static UserList newInstance(String param1, String param2) {
-        UserList fragment = new UserList();
-        Bundle args = new Bundle();
-        args.putString(DBContract.UserInfo.USER_FIRSTNAME, "Hello");
-        args.putString(ARG_PARAM2, "World");
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public UserList() {
-    }
+    public UserList() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,14 +46,10 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
         getActivity().setTitle("User List");
         db = new DBAdapter(this.getContext());
         db.open();
+        allUsers = new ArrayList<>();
 
-        // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<userDTO>(getActivity(),
+        mAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, getUsers());
-
-        if(mAdapter.isEmpty())
-            getActivity().setTitle("Adapter is Empty as Fuck");
-
     }
 
     @Override
@@ -95,8 +59,7 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
-
+        mListView.setAdapter(mAdapter);
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
 
@@ -105,14 +68,10 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
 
     @Override
     public void onAttach(Context context) {
-
         super.onAttach(context);
-
         Activity a;
-
         if (context instanceof Activity) {
             a = (Activity) context;
-
             try {
                 mListener = (OnFragmentInteractionListener) a;
             } catch (ClassCastException e) {
@@ -143,6 +102,12 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
             // fragment is attached to one) that an item has been selected.
            // mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
             mListener.onArticleSelected(position);
+            userDTO user = allUsers.get(position);
+            Toast.makeText(getContext(), user.getFirstname() + " " +
+                    user.getLastname() + "\n" +
+                    user.getUsertype(), Toast.LENGTH_LONG).show();
+
+
         }
     }
 
@@ -174,8 +139,8 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
         public void onArticleSelected(int position);
     }
 
-    public ArrayList<userDTO> getUsers() {
-        ArrayList<userDTO> users = new ArrayList<>();
+    public ArrayList<String> getUsers() {
+        ArrayList<String> users = new ArrayList<>();
         Cursor c = db.getAllUsers();
         if (c.moveToFirst())
         {
@@ -186,17 +151,18 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
                 user.setPassword(c.getString(2));
                 user.setFirstname(c.getString(3));
                 user.setLastname(c.getString(4));
-                user.setEmail(c.getString(5));
-                user.setUsertype(c.getString(6));
+                user.setUsertype(c.getString(5));
+                user.setEmail(c.getString(6));
                 user.setMealplan(c.getInt(7));
                 user.setWorkoutplan(c.getInt(8));
-                users.add(user);
-                Log.d("************ Username: ", user.getUsername());
+                allUsers.add(user);
+                users.add(user.toString());
             } while (c.moveToNext());
         }
         db.close();
+        Collections.sort(users);
+        Collections.sort(allUsers, new CustomComparator());
         return users;
-
     }
 
 }

@@ -22,6 +22,9 @@ public class userDTO {
     private int mealplan;
     private int workoutplan;
 
+    @Override
+    public String toString() { return firstname + " " + lastname ; }
+
     public int getId() {
         return id;
     }

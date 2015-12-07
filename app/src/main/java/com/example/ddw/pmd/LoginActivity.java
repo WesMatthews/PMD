@@ -388,9 +388,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 SharedPreferences.Editor edit = pref.edit();
                 edit.putInt("currUser", c.getInt(0)).apply();
                 return true;
+            }else {
+                return false;
             }
 
-            return false;
         }
 
         @Override
