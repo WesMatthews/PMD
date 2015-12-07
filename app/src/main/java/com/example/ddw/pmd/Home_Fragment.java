@@ -18,6 +18,8 @@ public class Home_Fragment extends Fragment {
     private DBAdapter db;
     SharedPreferences pref;
     int currUser;
+    private int id = -1;
+    private static final String ARG_ID = "id";
 
     @Nullable
     @Override
@@ -27,9 +29,27 @@ public class Home_Fragment extends Fragment {
         currUser = pref.getInt("currUser", -1);
         getActivity().setTitle("Profile");
         db = new DBAdapter(this.getActivity());
-        setUserName();
+        if (getArguments() != null) {
+            id = getArguments().getInt(ARG_ID);
+            setUserFromList();
+        }
+        else {
+            setUserName();
+        }
         return view;
 
+    }
+
+    public void setUserFromList(){
+        TextView txtName = (TextView)view.findViewById(R.id.txtName);
+        Cursor c;
+        db.open();
+        c = db.getUser(id);
+        if(c.moveToFirst()) {
+            txtName.setText(c.getString(3) + " " + c.getString(4));
+        }
+
+        db.close();
     }
 
     public void setUserName(){

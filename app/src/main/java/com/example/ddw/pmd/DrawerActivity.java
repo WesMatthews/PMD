@@ -137,4 +137,12 @@ public class DrawerActivity extends AppCompatActivity
         frag.setArguments(args);
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
     }
+
+    public void onUserArticleSelected(int userid){
+        frag = new Home_Fragment();
+        Bundle args = new Bundle();
+        args.putInt("id", userid);
+        frag.setArguments(args);
+        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
+    }
 }

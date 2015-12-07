@@ -101,8 +101,9 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
            // mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
-            mListener.onArticleSelected(position);
+
             userDTO user = allUsers.get(position);
+            mListener.onUserArticleSelected(user.getId());
             Toast.makeText(getContext(), user.getFirstname() + " " +
                     user.getLastname() + "\n" +
                     user.getUsertype(), Toast.LENGTH_LONG).show();
@@ -136,7 +137,7 @@ public class UserList extends Fragment implements AbsListView.OnItemClickListene
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onArticleSelected(int position);
+        public void onUserArticleSelected(int user);
     }
 
     public ArrayList<String> getUsers() {
