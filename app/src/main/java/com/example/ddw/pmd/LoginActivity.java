@@ -84,6 +84,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int currUser = pref.getInt("currUser", -1);
         if(currUser != -1){
             startActivity(i);
+            finish();
         }
         //DeleteDB();
         db = new DBAdapter(this);
