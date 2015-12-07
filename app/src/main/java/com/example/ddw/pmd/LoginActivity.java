@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if(currUser != -1){
             startActivity(i);
         }
-        DeleteDB();
+        //DeleteDB();
         db = new DBAdapter(this);
         // get the existing database file or from assets folder if doesn't exist
         getDB();
@@ -388,9 +388,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 SharedPreferences.Editor edit = pref.edit();
                 edit.putInt("currUser", c.getInt(0)).apply();
                 return true;
+            }else {
+                return false;
             }
 
-            return false;
         }
 
         @Override
