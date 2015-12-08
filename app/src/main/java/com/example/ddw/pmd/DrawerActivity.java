@@ -71,6 +71,9 @@ public class DrawerActivity extends AppCompatActivity
         } else if (frag instanceof WorkoutPlanDetailsFragment) {
             frag = new WorkoutPlanListFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
+        } else if (frag instanceof About_Fragment) {
+            frag = new Home_Fragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
         }
         else
             super.onBackPressed();
