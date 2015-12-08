@@ -26,7 +26,8 @@
             android:name=".DrawerActivity"
             android:label="@string/title_activity_drawer"
             android:parentActivityName=".LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.ddw.pmd.LoginActivity" />

@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -32,6 +34,7 @@ public class MealPlanDetailsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private int id = -1;
     private String mParam2;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -78,9 +81,13 @@ public class MealPlanDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_meal_plan_details, container, false);
-        if(id > -1)
+        if(id > -1) {
+            view = inflater.inflate(R.layout.fragment_meal_plan_details, container, false);
             setMealDetails();
+        }
+        else{
+            view = inflater.inflate(R.layout.fragment_meal_plan_add,container,false);
+         }
         return view;
     }
 
@@ -137,4 +144,5 @@ public class MealPlanDetailsFragment extends Fragment {
         }
         db.close();
     }
+
 }

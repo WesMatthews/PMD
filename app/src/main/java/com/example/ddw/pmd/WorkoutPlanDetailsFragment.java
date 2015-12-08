@@ -69,10 +69,15 @@ public class WorkoutPlanDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_workout_plan_details, container, false);
+
         // Inflate the layout for this fragment
-        if(id > -1)
+        if(id > -1) {
+            view = inflater.inflate(R.layout.fragment_workout_plan_details, container, false);
             setWorkoutDetails();
+        }
+        else {
+            view = inflater.inflate(R.layout.fragment_workout_plan_add, container, false);
+        }
         return view;
     }
 
