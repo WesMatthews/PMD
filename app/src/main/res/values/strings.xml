@@ -21,12 +21,14 @@
     <string name="action_settings">Settings</string>
     <string name="action_about">About</string>
 
-    <string name="about_text">This app is intended for use by athletic trainers and their clients.\n\n
-                            When a trainer logs in, they will be presented with a list of their clients which they can
-                            check on or update their information.  When a client logs in, they will be presented
-                            with there own profile page.</string>
+    <string name="about_text">Wes Matthews, Darryl Rutledge, David Murray\n
+                            Dec. 2015\n\n
+                            This app is intended for use by athletic trainers and their clients.
+                            The is the trainer version of the app. The trainer has the ability to view all client profiles,
+                            create meal plans and create workout plans for their clients.\n\n
+                            This app uses a drawer activity and fragments for simplistic and intuitive navigation for the user.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="addBtn">Add Plan</string>
 </resources>

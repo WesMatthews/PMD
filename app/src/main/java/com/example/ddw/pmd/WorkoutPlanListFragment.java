@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ public class WorkoutPlanListFragment extends Fragment implements AbsListView.OnI
     private ListAdapter mAdapter;
     private ArrayList<workoutplanDTO> allWorkouts;
     Fragment frag = null;
+    FloatingActionButton fab;
     public WorkoutPlanListFragment() {}
 
     @Override
@@ -46,6 +48,15 @@ public class WorkoutPlanListFragment extends Fragment implements AbsListView.OnI
         super.onCreate(savedInstanceState);
         getActivity().setTitle("Workout Plan List");
         db = new DBAdapter(this.getContext());
+        db.open();
+        allWorkouts = new ArrayList<>();
+        mAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, getWorkouts());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         db.open();
         allWorkouts = new ArrayList<>();
         mAdapter = new ArrayAdapter<String>(getActivity(),
@@ -63,6 +74,14 @@ public class WorkoutPlanListFragment extends Fragment implements AbsListView.OnI
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
+
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onWorkoutArticleSelected(-1);
+            }
+        });
 
         return view;
     }

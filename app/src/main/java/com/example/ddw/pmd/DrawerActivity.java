@@ -17,6 +17,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.ddw.pmd.dtos.mealplanDTO;
 
@@ -27,12 +29,21 @@ public class DrawerActivity extends AppCompatActivity
 
     Fragment frag = null;
     SharedPreferences pref;
+
+    private String name;
+    private String shortdescription;
+    private String summary;
+
+    DBAdapter db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        db = new DBAdapter(getApplicationContext());
 
         pref = getSharedPreferences("userPrefs", Context.MODE_PRIVATE);
 
@@ -54,9 +65,17 @@ public class DrawerActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        } else if (frag instanceof MealPlanDetailsFragment) {
+            frag = new MealPlanListFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
+        } else if (frag instanceof WorkoutPlanDetailsFragment) {
+            frag = new WorkoutPlanListFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
         }
+        else
+            super.onBackPressed();
+
+
     }
 
     @Override
@@ -100,9 +119,7 @@ public class DrawerActivity extends AppCompatActivity
             frag = new MealPlanListFragment();
         } else if (id == R.id.nav_WorkoutPlan){
             frag = new WorkoutPlanListFragment();
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_signout) {
+        }  else if (id == R.id.nav_signout) {
             SharedPreferences.Editor edit = pref.edit();
             edit.putInt("currUser", -1).apply();
             Intent i = new Intent(this, LoginActivity.class);
@@ -145,4 +162,46 @@ public class DrawerActivity extends AppCompatActivity
         frag.setArguments(args);
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
     }
+
+    public void addMealPlan(View view){
+        EditText edtText = (EditText)findViewById(R.id.Plan_Name);
+        name = edtText.getText().toString();
+        edtText = (EditText)findViewById(R.id.Plan_Descript);
+        shortdescription = edtText.getText().toString();
+        edtText = (EditText)findViewById(R.id.Plan_Summary);
+        summary = edtText.getText().toString();
+
+        if(!name.equals("") && !shortdescription.equals("") && !summary.equals("")) {
+            db.open();
+            db.addMealplan(name, shortdescription, summary);
+            db.close();
+            Toast.makeText(getApplicationContext(), name + " Added!", Toast.LENGTH_SHORT).show();
+            frag = new MealPlanListFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
+
+        }
+
+    }
+
+    public void addWorkoutPlan(View view){
+        EditText edtText = (EditText)findViewById(R.id.Plan_Name);
+        name = edtText.getText().toString();
+        edtText = (EditText)findViewById(R.id.Plan_Descript);
+        shortdescription = edtText.getText().toString();
+        edtText = (EditText)findViewById(R.id.Plan_Summary);
+        summary = edtText.getText().toString();
+
+        if(!name.equals("") && !shortdescription.equals("") && !summary.equals("")) {
+            db.open();
+            db.addWorkoutplan(name, shortdescription, summary);
+            db.close();
+            Toast.makeText(getApplicationContext(), name + " Added!", Toast.LENGTH_SHORT).show();
+            frag = new WorkoutPlanListFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
+
+        }
+
+    }
+
+
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +39,8 @@ public class MealPlanListFragment extends Fragment implements AbsListView.OnItem
     private ListAdapter mAdapter;
     private ArrayList<mealplanDTO> allMeals;
     Fragment frag = null;
+    FloatingActionButton fab;
+
     public MealPlanListFragment() {}
 
     @Override
@@ -45,6 +48,17 @@ public class MealPlanListFragment extends Fragment implements AbsListView.OnItem
         super.onCreate(savedInstanceState);
         getActivity().setTitle("Meal Plan List");
         db = new DBAdapter(this.getContext());
+        db.open();
+        allMeals = new ArrayList<>();
+        mAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, getMeals());
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         db.open();
         allMeals = new ArrayList<>();
         mAdapter = new ArrayAdapter<String>(getActivity(),
@@ -63,6 +77,13 @@ public class MealPlanListFragment extends Fragment implements AbsListView.OnItem
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
 
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onMealArticleSelected(-1);
+            }
+        });
         return view;
     }
 
@@ -107,9 +128,6 @@ public class MealPlanListFragment extends Fragment implements AbsListView.OnItem
             mListener.onMealArticleSelected(meal.getId());
           //  frag = new MealPlanDetailsFragment();
            // getFragmentManager().beginTransaction().replace(R.id.frameLayout, frag).commit();
-            Toast.makeText(getContext(), meal.getPlanname() + "\n" +
-                    meal.getDescription() + "\n" +
-                    meal.getDetails(), Toast.LENGTH_LONG).show();
 
         }
     }
